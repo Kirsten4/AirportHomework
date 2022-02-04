@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
-public class FlightTest {
+public class FlightManagerTest {
 
     private Flight flight;
     private Pilot pilot1;
@@ -18,6 +18,7 @@ public class FlightTest {
     private Plane plane;
     private Passenger passenger1;
     private Passenger passenger2;
+    private FlightManager flightManager;
 
     @Before
     public void before(){
@@ -35,64 +36,25 @@ public class FlightTest {
         cabinCrewMembers.add(cabinCrewMember3);
         plane = new Plane(PlaneType.BOEING_787);
         flight = new Flight(pilots,cabinCrewMembers,plane, "F1122", Location.GLA, Location.SIN, "14:00");
-    }
-
-    @Test
-    public void hasPilots(){
-        assertEquals(2, flight.getPilots().size());
-    }
-
-    @Test
-    public void hasCabinCrewMembers(){
-        assertEquals(3, flight.getCabinCrewMembers().size());
-    }
-
-    @Test
-    public void hasEmptyBookedPassengers(){
-        assertEquals(0, flight.getPassengers().size());
-    }
-
-    @Test
-    public void hasPlane(){
-        assertEquals(plane, flight.getPlane());
-    }
-
-    @Test
-    public void hasFlightNumber(){
-        assertEquals("F1122", flight.getFlightNumber());
-    }
-
-    @Test
-    public void hasDestination(){
-        assertEquals(Location.GLA, flight.getDestination());
-    }
-
-    @Test
-    public void hasDepartureAirport(){
-        assertEquals(Location.SIN, flight.getDepartureAirport());
-    }
-
-    @Test
-    public void hasDepartureTime(){
-        assertEquals("14:00", flight.getDepartureTime());
-    }
-
-    @Test
-    public void canReturnNumberOfAvailableSeats(){
-        assertEquals(248, flight.availableSeats());
-    }
-
-    @Test
-    public void canBookPassenger(){
         passenger1 = new Passenger("Kirsten", 3);
         passenger2 = new Passenger("David", 1);
         flight.bookPassenger(passenger1);
         flight.bookPassenger(passenger2);
-        assertEquals(passenger1, flight.getPassengers().get(0));
-        assertEquals(passenger2, flight.getPassengers().get(1));
-        assertEquals(246, flight.availableSeats());
+        flightManager = new FlightManager(flight);
     }
 
+    @Test
+    public void canCalculateReservedBaggageWeight(){
+        assertEquals(59979.5, flightManager.reservedBaggageWeight(),0.01);
+    }
 
+    @Test
+    public void canCalculateBookedBaggageWeight(){
+        assertEquals(241.85, flightManager.bookedBaggageWeight(),0.01);
+    }
 
+    @Test
+    public void canCalculateRemainingBaggageWeight(){
+        assertEquals(59737.65, flightManager.remainingBaggageWeight(),0.01);
+    }
 }
